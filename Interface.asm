@@ -71,6 +71,30 @@
 		and $t1, $a0, 1		# if the row is odd then is is a vert line
 		bnez, $t1, vert_line	# if the coord is a vert line, create one
 		horz_line:
+			addi $t1, $a0, 1	# turns row num given to num from 0-5
+			srl $t1, $t1, 1		# this makes it easy to multiply,  t1 = end of line
+			
+			mul $t2, $t1, 256	# gets the offset from the pixel
+			
+			mul $t1, $t1, 2048	# 
+			add $t1, $t1, $t2	# y coord of the end of vert line -- calculated vale + offset
+			
+			add $t2, $a1, 1		# turns col num given to num from 1-5
+			srl $t2, $t2, 1		# this makes it easy to multiply,  t1 = end of line
+			
+			mul $t2, $t2, 32	# x coord
+		
+			add $t0, $s0, 1044	# stores the loc of the first dot + 1 pixel
+			add $t0, $t0, $t1	# adds first dot + y coord, this will move the starting dot up and down
+			add $t0, $t0, $t2	# adds x coord to the starting point
+			
+			add $t1, $t0, 24	# $t0 = counter  $t1 = end point
+			li $t2, 0xff0000	# $t3 stores the color 'RED'
+			lp_horz:
+				bgt $t0, $t1, return	# if counter < end, exit
+				sw $t2, 0($t0)		# color the pixel at $t0
+				addiu $t0, $t0, 4	# increment counter
+				j lp_horz
 			jr $ra
 		vert_line:
 			# The few blocks are trying to find the end pixel for the line and store it in $t1
@@ -99,7 +123,7 @@
 				bgt $t0, $t1, return	# if start > end, stop
 				sw $t2, 0($t0)		# color the pixel at $t0
 				j lp_vert
-		jr $ra
+			jr $ra
 		
 	exit:
 		li $v0, 10 			# terminate the program

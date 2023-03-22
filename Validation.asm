@@ -18,41 +18,41 @@
 		sw $s0, 0($sp)		# 
 		addi $sp, $sp, -4 	# preserves saved resgisters
 		sw $s1, 0($sp)		#
+		inpt_loop:
+			addiu $v0, $0, 4	#
+			la $a0, row_prompt	# prints the row prompt
+			syscall			#
+		
+			addiu $v0, $0, 5	#
+			syscall			# reads row num and stores it in s0
+			add $s0, $v0, $0	#
+		
+			addiu $v0, $0, 4	#
+			la $a0, col_prompt	# prints the column prompt
+			syscall			#
+		
+			addiu $v0, $0, 5	#
+			syscall			# reads col num and stores it in s1
+			add $s1, $v0, $0	#
 	
-		addiu $v0, $0, 4	#
-		la $a0, row_prompt	# prints the row prompt
-		syscall			#
+			move $a0, $s0		#
+			move $a1, $s1		# sets the row and col as args
 		
-		addiu $v0, $0, 5	#
-		syscall			# reads row num and stores it in s0
-		add $s0, $v0, $0	#
+			jal input_eval		# checks to see if the row and col are valid lines
 		
-		addiu $v0, $0, 4	#
-		la $a0, col_prompt	# prints the column prompt
-		syscall			#
+			beqz $v0, inpt_loop	# if returns false, repeat until valid
 		
-		addiu $v0, $0, 5	#
-		syscall			# reads col num and stores it in s1
-		add $s1, $v0, $0	#
-	
-		move $a0, $s0		#
-		move $a1, $s1		# sets the row and col as args
+			move $v0, $s0		# row
+			move $v1, $s1		# col
 		
-		jal input_eval		# checks to see if the row and col are valid lines
+			lw $s1, 0($sp)		#
+			addi $sp, $sp, 4	#
+			lw $s0, 0($sp)		# returns the original saved registers
+			addi $sp, $sp, 4	#
 		
-		beqz $v0, input		# if returns false, repeat until valid
-		
-		move $v0, $s0		# row
-		move $v1, $s1		# col
-		
-		lw $s1, 0($sp)		#
-		addi $sp, $sp, 4	#
-		lw $s0, 0($sp)		# returns the original saved registers
-		addi $sp, $sp, 4	#
-		
-		lw $ra, 0($sp)		#
-		addi $sp, $sp, 4	# goes back to where it was excuted
-		jr $ra			#
+			lw $ra, 0($sp)		#
+			addi $sp, $sp, 4	# goes back to where it was excuted
+			jr $ra			#
 		
 # Input Evaluation
 # ----------------
