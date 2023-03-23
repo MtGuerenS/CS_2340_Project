@@ -65,11 +65,18 @@
 # -----------
 	# a0 = row num
 	# a1 = col num
-	# a2 = player num
+	# a2 = player num 0/1
 	# Notes: a0 and a1 is the player move and a2 determines the color
 	create_line:
-		and $t1, $a0, 1		# if the row is odd then is is a vert line
-		bnez, $t1, vert_line	# if the coord is a vert line, create one
+		bnez $a2, color2
+			li $a2, 0x92b4f7	# sets the color to 'BLUE'
+			j conditional
+		color2:
+			li $a2, 0xe63e3e	# sets the color to 'RED'
+	
+		conditional: 
+			and $t1, $a0, 1	# if the row is odd then is is a vert line
+			bnez, $t1, vert_line	# if the coord is a vert line, create one
 		horz_line:
 			addi $t1, $a0, 1	# turns row num given to num from 0-5
 			srl $t1, $t1, 1		# this makes it easy to multiply,  t1 = end of line
@@ -84,15 +91,14 @@
 			
 			mul $t2, $t2, 32	# x coord
 		
-			add $t0, $s0, 1044	# stores the loc of the first dot + 1 pixel
+			add $t0, $s0, 1012	# stores the loc of the first dot + 1 pixel
 			add $t0, $t0, $t1	# adds first dot + y coord, this will move the starting dot up and down
 			add $t0, $t0, $t2	# adds x coord to the starting point
 			
 			add $t1, $t0, 24	# $t0 = counter  $t1 = end point
-			li $t2, 0xff0000	# $t3 stores the color 'RED'
 			lp_horz:
 				bgt $t0, $t1, return	# if counter < end, exit
-				sw $t2, 0($t0)		# color the pixel at $t0
+				sw $a2, 0($t0)		# color the pixel at $t0
 				addiu $t0, $t0, 4	# increment counter
 				j lp_horz
 			jr $ra
@@ -117,11 +123,10 @@
 			add $t1, $t0, $t1	# combines the x and y coods to make end point
 			
 			addi $t0, $t1, -2048	# sets the start pixel for loop 8 pixels down (8*4*64)
-			li $t2, 0xff0000	# $t3 stores the color 'RED'
 			lp_vert:
 				addi $t0, $t0, 256	# go down one pixel
 				bgt $t0, $t1, return	# if start > end, stop
-				sw $t2, 0($t0)		# color the pixel at $t0
+				sw $a2, 0($t0)		# color the pixel at $t0
 				j lp_vert
 			jr $ra
 		
