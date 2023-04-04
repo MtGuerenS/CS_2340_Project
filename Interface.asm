@@ -6,6 +6,7 @@
 .text
 .globl interface
 .globl create_line
+.globl create_box
 # Creates the Interface for Dots and Boxes
 # ----------------------------------------
 	# Call the subroutine below to set up the bitmap image
@@ -129,6 +130,47 @@
 				sw $a2, 0($t0)		# color the pixel at $t0
 				j lp_vert
 			jr $ra
+			
+# Create Box 
+# -----------
+	# a0 = row num (0-4)
+	# a1 = col num	(0-6)
+	# a2 = player num 0/1
+	# Notes: a0 and a1 is the player move and a2 determines the color
+	create_box:
+		bnez $a2, color_2
+			li $a2, 0x92b4f7	# sets the color to 'BLUE'
+			j box_setup
+		color_2:
+			li $a2, 0xe63e3e	# sets the color to 'RED'
+		box_setup:
+			addi $t1, $a0, 0	# places row num 0-4 into $t1
+			
+			mul $t2, $t1, 256	# gets the offset from the pixel
+			
+			mul $t1, $t1, 2048	# 
+			add $t1, $t1, $t2	# y coord of the end of vert line -- calculated vale + offset
+			
+			add $t2, $a1, 1		# places col num 0-5 into $t2
+			
+			mul $t2, $t2, 32	# x coord
+		
+			add $t0, $s0, 1268 #1012	# stores the loc of the first pixel in box 0,0
+			add $t0, $t0, $t1	# adds first dot + y coord, this will move the starting dot up and down
+			add $t0, $t0, $t2	# adds x coord to the starting point
+			
+			add $t1, $t0, 24	# $t0 = counter  $t1 = end point -- for lines
+			add $t2, $t1, 1792	# $t3 = end of box
+			lp_box:
+				bgt $t0, $t1, new_line	# if counter < end, exit
+				sw $a2, 0($t0)		# color the pixel at $t0
+				addiu $t0, $t0, 4	# increment counter
+				j lp_box
+			new_line:
+				addiu $t0, $t0, 228
+				addiu $t1, $t1, 256
+				bge $t2, $t1, lp_box
+				jr $ra
 		
 	exit:
 		li $v0, 10 			# terminate the program
