@@ -1,6 +1,6 @@
 .data
 	display_start: .word 0x10040000
-	backgrd_end:   .word 0x10043000
+	backgrd_end:   .word 0x10042B00	# 4 bits * [(6 pixels * 6 lines + 7 dots) * 64 pixels]
 	display_end:   .word 0x10044000
 
 .text
@@ -32,10 +32,6 @@
 		add $t0, $s0, $0	# creates copy of the start of display to increment it
 		li $t1, 0xffffff	# $t3 stores the color 'WHITE'
 		li $t2, 0xeeeeee	# $t3 stores the color 'GREY'
-		# bkgd_loop:
-		#	sw $t1, 0($t0)		# makes the pixel white at $t0
-		#	addi $t0, $t0, 4	# increments display pointer by 4
-		#	bne $t0, $s1, bkgd_loop	# while display start < background end, loop
 		fill_space:
 			sw $t2, 0($t0)		# makes the pixel grey at $t0
 			addi $t0, $t0, 4	# increments display pointer by 4
@@ -52,11 +48,11 @@
 			
 		dots_row:
 			bge $t0, $s1, return	# exit the loop if col stopping point > background end, return
-			addi $t2, $t2, 2303	# updates the col stopping point to the next row
-			addi $t0, $t0, 2048	# updates where the row will start
+			addi $t2, $t2, 1791	# updates the col stopping point to the next row
+			addi $t0, $t0, 1540	# updates where the row will start
 			dots_col:
 				sw $t1, 0($t0)		# makes the pixel black at $t0
-				addi $t0, $t0, 32	# increments by 8 pixels
+				addi $t0, $t0, 28	# increments by 8 pixels
 				blt $t0, $t2, dots_col	# while display pointer < background end, loop
 				j dots_row		# else 
 		return:
@@ -76,27 +72,27 @@
 			li $a2, 0xe63e3e	# sets the color to 'RED'
 	
 		conditional: 
-			and $t1, $a0, 1	# if the row is odd then is is a vert line
+			and $t1, $a0, 1		# if the row is odd then is is a vert line
 			bnez, $t1, vert_line	# if the coord is a vert line, create one
 		horz_line:
 			addi $t1, $a0, 1	# turns row num given to num from 0-5
 			srl $t1, $t1, 1		# this makes it easy to multiply,  t1 = end of line
 			
-			mul $t2, $t1, 256	# gets the offset from the pixel
+			mul $t2, $t1, 252	# gets the offset from the pixel
 			
-			mul $t1, $t1, 2048	# 
+			mul $t1, $t1, 1540 #2048	# 
 			add $t1, $t1, $t2	# y coord of the end of vert line -- calculated vale + offset
 			
 			add $t2, $a1, 1		# turns col num given to num from 1-5
 			srl $t2, $t2, 1		# this makes it easy to multiply,  t1 = end of line
 			
-			mul $t2, $t2, 32	# x coord
+			mul $t2, $t2, 28 #32	# x coord
 		
-			add $t0, $s0, 1012	# stores the loc of the first dot + 1 pixel
+			add $t0, $s0, 1016	# stores the loc of the first dot + 1 pixel
 			add $t0, $t0, $t1	# adds first dot + y coord, this will move the starting dot up and down
 			add $t0, $t0, $t2	# adds x coord to the starting point
 			
-			add $t1, $t0, 24	# $t0 = counter  $t1 = end point
+			add $t1, $t0, 20	# $t0 = counter  $t1 = end point
 			lp_horz:
 				bgt $t0, $t1, return	# if counter < end, exit
 				sw $a2, 0($t0)		# color the pixel at $t0
@@ -109,21 +105,21 @@
 			srl $t1, $t1, 1		# this makes it easy to multiply,  t1 = end of line
 			
 			addi $t2, $t1, -1	#
-			mul $t2, $t2, 256	# gets the offset from the pixel
+			mul $t2, $t2, 252 #256	# gets the offset from the pixel
 			
-			mul $t1, $t1, 2048	# 
+			mul $t1, $t1, 1540 #2048	# 
 			add $t1, $t1, $t2	# y coord of the end of vert line
 			
 			add $t2, $a1, 1		# turns col num given to num from 1-5
 			srl $t2, $t2, 1		# this makes it easy to multiply,  t1 = end of line
 			
-			mul $t2, $t2, 32	#
-			add $t0, $s0, 1040	# x coord of the end of vert line
+			mul $t2, $t2, 28 #32	#
+			add $t0, $s0, 1036 #1040	# x coord of the end of vert line
 			
 			add $t1, $t1, $t2	#
 			add $t1, $t0, $t1	# combines the x and y coods to make end point
 			
-			addi $t0, $t1, -2048	# sets the start pixel for loop 8 pixels down (8*4*64)
+			addi $t0, $t1, -1536	# sets the start pixel for loop 8 pixels down (8*4*64)
 			lp_vert:
 				addi $t0, $t0, 256	# go down one pixel
 				bgt $t0, $t1, return	# if start > end, stop
