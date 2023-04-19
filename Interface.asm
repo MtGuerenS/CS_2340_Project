@@ -1,4 +1,5 @@
 .data
+.globl display_end
 	display_start: .word 0x10040000
 	backgrd_end:   .word 0x10042B00	# 4 bits * [(6 pixels * 6 lines + 7 dots) * 64 pixels]
 	display_end:   .word 0x10044000
