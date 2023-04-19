@@ -140,6 +140,12 @@
 		color_2:
 			li $a2, 0xe63e3e	# sets the color to 'RED'
 		box_setup:
+			addi $a0, $a0, 1	# turns row num given to num from 0-5
+			srl $a0, $a0, 1		# this makes it easy to multiply,  t1 = end of line
+			
+			add $a1, $a1, 1		# turns col num given to num from 1-5
+			srl $a1, $a1, 1		# this makes it easy to multiply,  t1 = end of line
+		
 			addi $t1, $a0, 0	# places row num 0-4 into $t1
 			
 			mul $t2, $t1, 252	# gets the offset from the pixel

@@ -44,23 +44,33 @@ save_line:
 	# $a1 = col num
 	# Description: checks to see if the line placed makes a box, and if it does then place the box
 	check_move:
-		addi $sp, $sp, -4	# updates the stack pointer
-		sw $ra, 0($sp)		# places return address on stack
-			
-		jal check_line
-			
-		lw $a0, -4($sp)		# gets x cood of box 1
-		lw $a1, -8($sp)		# gets y cord of box 1
-		bne $a0, -1, create_box	# if coord is NOT -1, create the box using the args above
-			
-		lw $a0, -12($sp)	# gets x cood of box 2
-		lw $a1, -16($sp)	# gets y cord of box 2
-		bne $a0, -1, create_box # if coord is NOT -1, create the box using the args above
-			
-		lw $ra, 0($sp)		# gets return address from stack
-		addi $sp, $sp, 4	# updates the stack pointer
-		
-		jr $ra
+		addi $sp, $sp, -4    # updates the stack pointer
+		sw $ra, 0($sp)        # places return address on stack
+
+        	move $s5, $a0
+        	move $s6, $a1
+
+        	jal check_line
+
+        	lw $a0, -4($sp)        # gets x cood of box 1
+        	lw $a1, -8($sp)        # gets y cord of box 1
+        	beq $a0, -1, box2
+        	jal create_box
+
+	box2:        
+		lw $a0, -12($sp)    # gets x cood of box 2
+        	lw $a1, -16($sp)    # gets y cord of box 2
+        	beq $a0, -1, recover
+        	jal create_box 
+
+	recover:
+		move $a0, $s5
+        	move $a1, $s6
+
+        	lw $ra, 0($sp)        # gets return address from stack
+        	addi $sp, $sp, 4    # updates the stack pointer
+
+        	j return
 				
 check_line:	li $t2, -1
 		sw $t2, -4($sp)

@@ -18,8 +18,8 @@
 			j loop			# TEST can delete this line
 		
 		# example of using create_box
-		li $a0, 0
-		li $a1, 0
+		li $a0, 6
+		li $a1, 8
 		li $a2, 0
 		jal create_box
 		
