@@ -66,10 +66,10 @@
 	# Notes: a0 and a1 is the player move and a2 determines the color
 	create_line:
 		bnez $a2, color2
-			li $a2, 0x000000	# sets the color to 'BLUE'
+			li $t3, 0x000000	# sets the color to 'BLUE'
 			j conditional
 		color2:
-			li $a2, 0x000000	# sets the color to 'RED'
+			li $t3, 0x000000	# sets the color to 'RED'
 	
 		conditional: 
 			and $t1, $a0, 1		# if the row is odd then is is a vert line
@@ -95,7 +95,7 @@
 			add $t1, $t0, 20	# $t0 = counter  $t1 = end point
 			lp_horz:
 				bgt $t0, $t1, return	# if counter < end, exit
-				sw $a2, 0($t0)		# color the pixel at $t0
+				sw $t3, 0($t0)		# color the pixel at $t0
 				addiu $t0, $t0, 4	# increment counter
 				j lp_horz
 			jr $ra
@@ -123,7 +123,7 @@
 			lp_vert:
 				addi $t0, $t0, 256	# go down one pixel
 				bgt $t0, $t1, return	# if start > end, stop
-				sw $a2, 0($t0)		# color the pixel at $t0
+				sw $t3, 0($t0)		# color the pixel at $t0
 				j lp_vert
 			jr $ra
 			
@@ -135,10 +135,10 @@
 	# Notes: a0 and a1 is the player move and a2 determines the color
 	create_box:
 		bnez $a2, color_2
-			li $a2, 0x92b4f7	# sets the color to 'BLUE'
+			li $t3, 0x92b4f7	# sets the color to 'BLUE'
 			j box_setup
 		color_2:
-			li $a2, 0xe63e3e	# sets the color to 'RED'
+			li $t3, 0xe63e3e	# sets the color to 'RED'
 		box_setup:
 			addi $a0, $a0, 1	# turns row num given to num from 0-5
 			srl $a0, $a0, 1		# this makes it easy to multiply,  t1 = end of line
@@ -163,9 +163,10 @@
 			
 			add $t1, $t0, 20 	# $t0 = counter  $t1 = end point -- for lines
 			add $t2, $t1, 1280 	# $t3 = end of box (256 * 5)
+			
 			lp_box:
 				bgt $t0, $t1, new_line	# if counter < end, exit
-				sw $a2, 0($t0)		# color the pixel at $t0
+				sw $t3, 0($t0)		# color the pixel at $t0
 				addiu $t0, $t0, 4	# increment counter
 				j lp_box
 			new_line:

@@ -55,15 +55,21 @@ save_line:
         	lw $a0, -4($sp)        # gets x cood of box 1
         	lw $a1, -8($sp)        # gets y cord of box 1
         	beq $a0, -1, box2
+        	li $s7, 1
         	jal create_box
 
 	box2:        
 		lw $a0, -12($sp)    # gets x cood of box 2
         	lw $a1, -16($sp)    # gets y cord of box 2
-        	beq $a0, -1, recover
+        	beq $a0, -1, switch
+        	li $s7, 1
         	jal create_box 
 
-	recover:
+	switch:
+		bne $s7, 1, recover
+		li $s7, 0
+		jal switchPlayer
+	recover:	
 		move $a0, $s5
         	move $a1, $s6
 
