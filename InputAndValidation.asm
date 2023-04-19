@@ -64,32 +64,43 @@
         xor $t0, $a0, $a1    	# even num starts with 0 odd with 1, case would be true
         and $t0, $t0, 1        	# gets the LSb (ie xxxxx0)
         add $v0, $t0, $0    	# returns the T/F value
-        beqz $v0, error
+        beqz $v0, error	
+        blt $a0, 0, error	#jumps to error if row input is less than 0
+        blt $a1, 0, error	#jumps to error if column input is less than 0
+        bgt $a0, 12, error	#jumps to error if row input is greater than 12
+        bgt $a1, 16, error	#jumps to error if column input is greater than 16
 
-        sle $v0, $0, $a0    	#
-        beqz $v0, error     	# if row num is < 0, branch
+#        sle $v0, $0, $a0    	#
+#        beqz $v0, error     	# if row num is < 0, branch
 
-        addiu $t0, $0, 13	# sets $t0 to 13
-        slt $v0, $a0, $t0    	#
-        beqz $v0, error     	# if row num is > 12, branch
+#        addiu $t0, $0, 13	# sets $t0 to 13
+#        slt $v0, $a0, $t0    	#
+#        beqz $v0, error     	# if row num is > 12, branch
 
-        sle $v0, $0, $a1    	#
-        beqz $v0, error     	# if col num is < 0, branch
+#        sle $v0, $0, $a1    	#
+#        beqz $v0, error     	# if col num is < 0, branch
 
-        addiu $t0, $0, 17    	# sets $t0 to 17
-        slt $v0, $a1, $t0    	#
-        beqz $v0, error     	# if col num is > 16, branch
+#        addiu $t0, $0, 17    	# sets $t0 to 17
+#        slt $v0, $a1, $t0    	#
+#        beqz $v0, error     	# if col num is > 16, branch
+        
+        sw $ra, -4($sp)	#saves return address to stack
+        jal check_move		#checks if line is already taken, if $v1 = 0, not taken, if $v1 = 1, taken
+        lw $ra, -4($sp)	#retrieves return address from stack
+        bnez $v1, error	#returns an error if line is already taken
 
         j return
 
         error:
-            move $t0, $v0	# stores result in temp register so it isnt changed
+            	#move $t0, $v0	# stores result in temp register so it isnt changed
 
-            la $a0, err_msg	#
-            addiu $v0, $0, 4	# print error message
-            syscall   		#
-
-            move $v0, $t0   	# restores the original value of $v0
+            	la $a0, err_msg	#
+            	addiu $v0, $0, 4	# print error message
+            	syscall   		#
+            	
+		li $v0, 0		#set $v0 to 0 because this is the error method and it should always return an error
+		
+            	#move $v0, $t0   	# restores the original value of $v0
 
     return: jr $ra
 

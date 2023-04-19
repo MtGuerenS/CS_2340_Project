@@ -165,6 +165,12 @@
 			add $t1, $t0, 20 	# $t0 = counter  $t1 = end point -- for lines
 			add $t2, $t1, 1280 	# $t3 = end of box (256 * 5)
 			
+			bnez $a2, computer	#if its computer turn, increment computer score
+			addi $s3, $s3, 1	#if its player turn, increment player score
+			j lp_box		#jump past increment computer score
+			
+	computer:	addi $s4, $s4, 1	#increment computer score
+			
 			lp_box:
 				bgt $t0, $t1, new_line	# if counter < end, exit
 				sw $t3, 0($t0)		# color the pixel at $t0
