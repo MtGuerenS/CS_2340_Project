@@ -56,32 +56,43 @@
 		
 # Input Evaluation
 # ----------------
-	# a0 = row num
-	# a1 = col num
-	# if row and col are both even/odd, return false
-	input_eval:
-	
-		xor $t0, $a0, $a1	# even num starts with 0 odd with 1, case would be true
-		and $t0, $t0, 1		# gets the LSb (ie xxxxx0)
-		add $v0, $t0, $0	# returns the T/F value
-		
-		beqz $v0, error
-		#bgt $a1, 16, error	#if inputs are outside the boundaries of the grid, return error message
-		blt $a1, 0, error	
-		#bgt $a0, 12, error
-		blt $a0, 0, error	
-		
-	return: jr $ra
-		
-		
-	error:	la $a0, err_msg		#
-		addiu $v0, $0, 4	# print error message
-		syscall		# moves the right value to be returned
-		
-		li $v0, 0	#tells computer to re-prompt the user
-		
-		j return
-		
-	exit:
-		li $v0, 10 			# terminate the program
-		syscall
+    # a0 = row num
+    # a1 = col num
+    # if row and col are both even/odd, return false in $v0
+    input_eval:
+
+        xor $t0, $a0, $a1    	# even num starts with 0 odd with 1, case would be true
+        and $t0, $t0, 1        	# gets the LSb (ie xxxxx0)
+        add $v0, $t0, $0    	# returns the T/F value
+        beqz $v0, error
+
+        sle $v0, $0, $a0    	#
+        beqz $v0, error     	# if row num is < 0, branch
+
+        addiu $t0, $0, 13	# sets $t0 to 13
+        slt $v0, $a0, $t0    	#
+        beqz $v0, error     	# if row num is > 12, branch
+
+        sle $v0, $0, $a1    	#
+        beqz $v0, error     	# if col num is < 0, branch
+
+        addiu $t0, $0, 17    	# sets $t0 to 17
+        slt $v0, $a1, $t0    	#
+        beqz $v0, error     	# if col num is > 16, branch
+
+        j return
+
+        error:
+            move $t0, $v0	# stores result in temp register so it isnt changed
+
+            la $a0, err_msg	#
+            addiu $v0, $0, 4	# print error message
+            syscall   		#
+
+            move $v0, $t0   	# restores the original value of $v0
+
+    return: jr $ra
+
+    exit:
+        li $v0, 10       	# terminate the program
+        syscall

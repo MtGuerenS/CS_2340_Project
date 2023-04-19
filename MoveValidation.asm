@@ -3,10 +3,11 @@ line_array:	.space 468
 box_array:	.space 192
 
 .text
-.globl	saveLine
-.globl	checkLine
+.globl	save_line
+.globl	check_move
 
-saveLine:	li $t2, 1		#save line to array in memory ($s4 is the value we write in memory to represent line is taken)
+save_line:	
+		li $t2, 1		#save line to array in memory ($s4 is the value we write in memory to represent line is taken)
 		div $t1, $a1, 2		#divide user second input by 2 (this is cause user input will jump by 2 each time: (0,1)(0,3)(0,5)(0,7), etc)
 		mul $t0, $a0, 9		#multiply user first input by 8 (because this is the row, and each row is 8 lines long)
 		add $t0, $t0, $t1	#add 8*row and col value
@@ -36,8 +37,32 @@ saveLine:	li $t2, 1		#save line to array in memory ($s4 is the value we write in
 		addi $t4, $t4, 1
 		sw $t4, box_array($t3)
 		j return		#return to jal instruction
+	
+# Checks Move
+# -----------
+	# $a0 = row num
+	# $a1 = col num
+	# Description: checks to see if the line placed makes a box, and if it does then place the box
+	check_move:
+		addi $sp, $sp, -4	# updates the stack pointer
+		sw $ra, 0($sp)		# places return address on stack
+			
+		jal check_line
+			
+		lw $a0, -4($sp)		# gets x cood of box 1
+		lw $a1, -8($sp)		# gets y cord of box 1
+		bne $a0, -1, create_box	# if coord is NOT -1, create the box using the args above
+			
+		lw $a0, -12($sp)	# gets x cood of box 2
+		lw $a1, -16($sp)	# gets y cord of box 2
+		bne $a0, -1, create_box # if coord is NOT -1, create the box using the args above
+			
+		lw $ra, 0($sp)		# gets return address from stack
+		addi $sp, $sp, 4	# updates the stack pointer
 		
-checkLine:	li $t2, -1
+		jr $ra
+				
+check_line:	li $t2, -1
 		sw $t2, -4($sp)
 		sw $t2, -8($sp)
 		sw $t2, -12($sp)

@@ -66,10 +66,10 @@
 	# Notes: a0 and a1 is the player move and a2 determines the color
 	create_line:
 		bnez $a2, color2
-			li $a2, 0x92b4f7	# sets the color to 'BLUE'
+			li $a2, 0x000000	# sets the color to 'BLUE'
 			j conditional
 		color2:
-			li $a2, 0xe63e3e	# sets the color to 'RED'
+			li $a2, 0x000000	# sets the color to 'RED'
 	
 		conditional: 
 			and $t1, $a0, 1		# if the row is odd then is is a vert line
@@ -80,7 +80,7 @@
 			
 			mul $t2, $t1, 252	# gets the offset from the pixel
 			
-			mul $t1, $t1, 1540 #2048	# 
+			mul $t1, $t1, 1540 	# 
 			add $t1, $t1, $t2	# y coord of the end of vert line -- calculated vale + offset
 			
 			add $t2, $a1, 1		# turns col num given to num from 1-5
@@ -105,16 +105,16 @@
 			srl $t1, $t1, 1		# this makes it easy to multiply,  t1 = end of line
 			
 			addi $t2, $t1, -1	#
-			mul $t2, $t2, 252 #256	# gets the offset from the pixel
+			mul $t2, $t2, 252 	# gets the offset from the pixel
 			
-			mul $t1, $t1, 1540 #2048	# 
+			mul $t1, $t1, 1540 	# 
 			add $t1, $t1, $t2	# y coord of the end of vert line
 			
 			add $t2, $a1, 1		# turns col num given to num from 1-5
 			srl $t2, $t2, 1		# this makes it easy to multiply,  t1 = end of line
 			
-			mul $t2, $t2, 28 #32	#
-			add $t0, $s0, 1036 #1040	# x coord of the end of vert line
+			mul $t2, $t2, 28 	#
+			add $t0, $s0, 1036 	# x coord of the end of vert line
 			
 			add $t1, $t1, $t2	#
 			add $t1, $t0, $t1	# combines the x and y coods to make end point
@@ -142,32 +142,32 @@
 		box_setup:
 			addi $t1, $a0, 0	# places row num 0-4 into $t1
 			
-			mul $t2, $t1, 256	# gets the offset from the pixel
+			mul $t2, $t1, 252	# gets the offset from the pixel
 			
-			mul $t1, $t1, 2048	# 
+			mul $t1, $t1, 1540	# 
 			add $t1, $t1, $t2	# y coord of the end of vert line -- calculated vale + offset
 			
 			add $t2, $a1, 1		# places col num 0-5 into $t2
 			
-			mul $t2, $t2, 32	# x coord
+			mul $t2, $t2, 28 	# x coord
 		
-			add $t0, $s0, 1268 #1012	# stores the loc of the first pixel in box 0,0
+			add $t0, $s0, 1272 	# stores the loc of the first pixel in box 0,0
 			add $t0, $t0, $t1	# adds first dot + y coord, this will move the starting dot up and down
 			add $t0, $t0, $t2	# adds x coord to the starting point
 			
-			add $t1, $t0, 24	# $t0 = counter  $t1 = end point -- for lines
-			add $t2, $t1, 1792	# $t3 = end of box
+			add $t1, $t0, 20 	# $t0 = counter  $t1 = end point -- for lines
+			add $t2, $t1, 1280 	# $t3 = end of box (256 * 5)
 			lp_box:
 				bgt $t0, $t1, new_line	# if counter < end, exit
 				sw $a2, 0($t0)		# color the pixel at $t0
 				addiu $t0, $t0, 4	# increment counter
 				j lp_box
 			new_line:
-				addiu $t0, $t0, 228
-				addiu $t1, $t1, 256
+				addiu $t0, $t0, 232 	# sets the counter to begnning of next line (256 - 4 * 5)
+				addiu $t1, $t1, 256	# sets the end to the next line
 				bge $t2, $t1, lp_box
 				jr $ra
 		
 	exit:
-		li $v0, 10 			# terminate the program
+		li $v0, 10 	# terminate the program
 		syscall
