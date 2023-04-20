@@ -1,4 +1,5 @@
 .data
+.globl line_array
 .globl box_array
 line_array:	.space 468
 box_array:	.space 192

@@ -19,12 +19,16 @@ tie:		.asciiz "Tie!"
 			add $t0, $s3, $s4		#gets sum of player score and computer score
 			beq $t0, 48, gameOver		#if the sum is 48, jump to game over
 			
-			jal input
+			beqz $a2, p1
+			jal make_move
+			j update
+			
+		p1:	jal input
 		
 			move $a0, $v0		# 
 			move $a1, $v1		# moves the inputs as args for create_line
 			
-			jal create_line		#creates a line on interface
+		update:	jal create_line		#creates a line on interface
 			jal check_box		#checks if new line will create boxes
 			jal save_line		#saves the line into the line array and increments the values in the box array
 			jal switchPlayer	#switches player turn
