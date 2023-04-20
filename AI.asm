@@ -3,7 +3,7 @@
 move_array:	.space 468
 
 .text
-.globl make_move
+#.globl make_move
 # Makes a Move
 # ------------
 	# Description: prioritizes boxes with 3 lines in it, then it goes for boxes with 0-1 lines, then it goes for boxes with 2 lines
@@ -118,7 +118,6 @@ create_array:
 		bnez $t1, increment		#if line already exists, check next line
 		div $t2, $t0, 36
 		mfhi $t1
-		beq $t1, 32, increment
 		and $t3, $t2, 1
 		beqz $t3, horizontal
 		srl $t2, $t2, 1
@@ -139,6 +138,7 @@ create_array:
 		addi $s5, $s5, 4
 		j increment
 	horizontal:
+		beq $t1, 32, increment
 		srl $t2, $t2, 1
 		mul $t2, $t2, 32
 		add $t2, $t2, $t1
