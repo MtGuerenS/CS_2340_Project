@@ -1,7 +1,9 @@
 .data	
 .align 2
 onezero_array:	.space 468
+space:		.space 468
 two_array:	.space 468
+space2:		.space 468
 three_array:	.space 468
 
 .text
@@ -10,23 +12,22 @@ three_array:	.space 468
 # ------------
 	# Description: prioritizes boxes with 3 lines in it, then it goes for boxes with 0-1 lines, then it goes for boxes with 2 lines
 	make_move:
-		li $t9, 3
 		sw $ra, -4($sp)
 		jal create_array
 		lw $ra, -4($sp)
 		move $t3, $s5
 	calcmove:	
-		div $t3, $t3, 4
-		beq $t3, 0, next_move
-	random:	move $a1, $t3
+		div $t4, $t3, 4
+		beq $t4, 0, next_move
+	random:	move $a1, $t4
 		li $v0, 42
 		syscall
 		move $t0, $a0
 		mul $t0, $t0, 4
-		bne $t9, 3, calc2
+		bne $t3, $s5, calc2
 		lw $t0, three_array($t0)
 		j cont
-	calc2:	beq $t9, 0, calc1
+	calc2:	bne $t3, $s7, calc1
 		lw $t0, onezero_array($t0)
 		j cont
 	calc1:	lw $t0, two_array($t0)
@@ -43,10 +44,9 @@ three_array:	.space 468
 	next_move:
 		beq $t3, $s7, onezero
 		move $t3, $s7
-		j fin
+		j calcmove
 	onezero:
 		move $t3, $s6
-	fin:	addi $t9, $t9, -1
 		j calcmove
 		
 	exit:
