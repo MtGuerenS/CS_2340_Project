@@ -19,7 +19,11 @@ tie:		.asciiz "Tie!"
 			add $t0, $s3, $s4		#gets sum of player score and computer score
 			beq $t0, 48, gameOver		#if the sum is 48, jump to game over
 			
-			#beqz $a2, p1
+			beqz $a2, p1
+			li $v0, 32
+			la $a0, 1000
+			syscall
+			
 			jal make_move
 			j update
 			
