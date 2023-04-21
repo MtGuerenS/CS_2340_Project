@@ -121,7 +121,7 @@
 		lw $t2, 0($t0)
 		beqz $t2, repeat
 		li $v0, 32
-		li $a0, 2
+		li $a0, 1
 		syscall
 		sw $t9, ($t0)
 		addi $t8, $t8, 1
