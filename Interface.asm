@@ -38,6 +38,7 @@
 			addi $t0, $t0, 4	# increments display pointer by 4
 			bne $t0, $s2, fill_space	# while display start < display end, loop
 		jr $ra
+		
 	
 # Create the Dots for the Interface
 # ---------------------------------

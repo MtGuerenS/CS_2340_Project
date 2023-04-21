@@ -60,9 +60,7 @@ switchPlayer:	addi $a2, $a2, 1
 		and $a2, $a2, 1
 		jr $ra
 		
-gameOver:	li $v0, 4			#print "Game Over!\n"
-		la $a0, game_over
-		syscall
+gameOver:	jal endScreen
 		
 		bgt $s3, $s4, player		#if player score greater than computer score, player wins
 		blt $s3, $s4, computer		#if player score less than computer score, computer wins
@@ -71,13 +69,11 @@ gameOver:	li $v0, 4			#print "Game Over!\n"
 		j exit
 
 	player:	
-		la $a0, player_wins		#print player wins message
-		syscall
+		jal blue_wins
 		j exit
 		
 	computer:	
-		la $a0, computer_wins		#print computer wins message
-		syscall
+		jal red_wins
 		j exit
 
 exit:
