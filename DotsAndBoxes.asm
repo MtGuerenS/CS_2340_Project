@@ -32,7 +32,7 @@ prompt:		.asciiz "Which game mode would you like to play?\n2 for 2P, 1 for 1P, 0
 			beq $s7, 0, comp
 			beqz $a2, p1
 		comp:	li $v0, 32
-			la $a0, 500
+			la $a0, 300
 			syscall
 			
 			jal make_move
