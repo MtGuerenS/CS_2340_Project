@@ -82,19 +82,19 @@ save_line:
         	lw $a0, -4($sp)        # gets x cood of box 1
         	lw $a1, -8($sp)        # gets y cord of box 1
         	beq $a0, -1, box2	#if no box complete, go to box 2
-        	li $s7, 1		#after box complete, still same person's turn
+        	li $t9, 1		#after box complete, still same person's turn
         	jal create_box		#draw in box
 
 	box2:        
 		lw $a0, -12($sp)    	#gets x cood of box 2
         	lw $a1, -16($sp)    	#gets y cord of box 2
         	beq $a0, -1, switch	#if no box complete, jump to switch
-        	li $s7, 1		#after box complete, still same person's turn
+        	li $t9, 1		#after box complete, still same person's turn
         	jal create_box 		#create box
 
 	switch:
-		bne $s7, 1, recover	#if we did not create a box, don't switch player turn
-		li $s7, 0		#set $s7 to 0 for future tests
+		bne $t9, 1, recover	#if we did not create a box, don't switch player turn
+		li $t9, 0		#set $t9 to 0 for future tests
 		jal switchPlayer	#switch player turn
 		
 	recover:	

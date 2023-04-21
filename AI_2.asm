@@ -27,7 +27,7 @@ three_array:	.space 468
 		bne $t3, $s5, calc2
 		lw $t0, three_array($t0)
 		j cont
-	calc2:	bne $t3, $s7, calc1
+	calc2:	bne $t3, $t8, calc1
 		lw $t0, onezero_array($t0)
 		j cont
 	calc1:	lw $t0, two_array($t0)
@@ -42,8 +42,8 @@ three_array:	.space 468
 		j return
 		
 	next_move:
-		beq $t3, $s7, onezero
-		move $t3, $s7
+		beq $t3, $t8, onezero
+		move $t3, $t8
 		j calcmove
 	onezero:
 		move $t3, $s6
@@ -62,7 +62,7 @@ create_array:
 		li $t0, 0			#starting index of array
 		li $s5, 0
 		li $s6, 0
-		li $s7, 0
+		li $t8, 0
 	loop:
 		beq $t0, 468, return		#if end of array, return
 		lw $t1, line_array($t0)	#load value in line array into t1
@@ -86,7 +86,7 @@ create_array:
 	vtry22:	bne $t5, 2, vtry21
 		sw $t0, two_array($s6)
 		j done2
-	vtry21:	sw $t0, onezero_array($s7)
+	vtry21:	sw $t0, onezero_array($t8)
 		j done1
 	vbox1:	bne $t3, 3, vtry12
 		sw $t0, three_array($s5)
@@ -94,7 +94,7 @@ create_array:
 	vtry12:	bne $t3, 2, vtry11
 		sw $t0, two_array($s6)
 		j done2
-	vtry11:	sw $t0, onezero_array($s7)
+	vtry11:	sw $t0, onezero_array($t8)
 		j done1
 	horizontal:
 		beq $t1, 32, increment
@@ -113,7 +113,7 @@ create_array:
 	htry22:	bne $t5, 2, htry21
 		sw $t0, two_array($s6)
 		j done2
-	htry21:	sw $t0, onezero_array($s7)
+	htry21:	sw $t0, onezero_array($t8)
 		j done1
 	hbox1:	bne $t3, 3, htry12
 		sw $t0, three_array($s5)
@@ -121,14 +121,14 @@ create_array:
 	htry12:	bne $t3, 2, htry11
 		sw $t0, two_array($s6)
 		j done2
-	htry11:	sw $t0, onezero_array($s7)
+	htry11:	sw $t0, onezero_array($t8)
 		j done1
 		
 	done3:	addi $s5, $s5, 4
 		j increment
 	done2:	addi $s6, $s6, 4
 		j increment
-	done1:	addi $s7, $s7, 4
+	done1:	addi $t8, $t8, 4
 		j increment
 		
 	increment:

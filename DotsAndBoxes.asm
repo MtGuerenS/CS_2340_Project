@@ -3,6 +3,7 @@ game_over:	.asciiz "Game Over!\n"
 player_wins:	.asciiz "Player Wins!"
 computer_wins:	.asciiz "Computer Wins!"
 tie:		.asciiz "Tie!"
+prompt:		.asciiz "Which game mode would you like to play?\n2 for 2P, 1 for 1P, 0 for 0P: "
 
 .text
 .globl main
@@ -11,6 +12,14 @@ tie:		.asciiz "Tie!"
 	#s3 = player score
 	#s4 = computer score
 	main:
+		li $v0, 4
+		la $a0, prompt
+		syscall
+		
+		li $a1, 3
+		jal startScreen
+		
+		
 		jal interface
 		
 		li $a2, 0
@@ -19,9 +28,11 @@ tie:		.asciiz "Tie!"
 			add $t0, $s3, $s4		#gets sum of player score and computer score
 			beq $t0, 48, gameOver		#if the sum is 48, jump to game over
 			
+			beq $s7, 2, p1
+			beq $s7, 0, comp
 			beqz $a2, p1
-			li $v0, 32
-			la $a0, 1000
+		comp:	li $v0, 32
+			la $a0, 500
 			syscall
 			
 			jal make_move
