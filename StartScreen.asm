@@ -9,6 +9,7 @@
 .globl endScreen
 .globl blue_wins
 .globl red_wins
+.globl tied
 # Creates the Interface for Dots and Boxes
 # ----------------------------------------
 	# Call the subroutine below to set up the bitmap image
@@ -306,6 +307,41 @@
 		sw $t9, 1132($t0)
 		sw $t9, 1136($t0)
 		sw $t9, 1140($t0)
+		j return
+		
+	tied:
+		li $t9, 0xffffff
+		addi $t0, $s0, 1896
+		
+		sw $t9, 0($t0)
+		sw $t9, 4($t0)
+		sw $t9, 8($t0)
+		sw $t9, 260($t0)
+		sw $t9, 516($t0)
+		sw $t9, 772($t0)
+		sw $t9, 1028($t0)
+		
+		sw $t9, 16($t0)
+		sw $t9, 20($t0)
+		sw $t9, 24($t0)
+		sw $t9, 276($t0)
+		sw $t9, 532($t0)
+		sw $t9, 788($t0)
+		sw $t9, 1040($t0)
+		sw $t9, 1044($t0)
+		sw $t9, 1048($t0)
+		
+		sw $t9, 32($t0)
+		sw $t9, 36($t0)
+		sw $t9, 40($t0)
+		sw $t9, 288($t0)
+		sw $t9, 544($t0)
+		sw $t9, 548($t0)
+		sw $t9, 552($t0)
+		sw $t9, 800($t0)
+		sw $t9, 1056($t0)
+		sw $t9, 1060($t0)
+		sw $t9, 1064($t0)
 		j return
 		
 	choice:

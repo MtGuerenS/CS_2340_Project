@@ -61,11 +61,12 @@ switchPlayer:	addi $a2, $a2, 1
 		jr $ra
 		
 gameOver:	jal endScreen
-		
+		li $v0, 32
+		li $a0, 1000
+		syscall
 		bgt $s3, $s4, player		#if player score greater than computer score, player wins
 		blt $s3, $s4, computer		#if player score less than computer score, computer wins
-		la $a0, tie			#if neither (scores are equal) print tie message
-		syscall
+		jal tied
 		j exit
 
 	player:	
