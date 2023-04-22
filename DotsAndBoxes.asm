@@ -1,8 +1,4 @@
 .data
-game_over:	.asciiz "Game Over!\n"
-player_wins:	.asciiz "Player Wins!"
-computer_wins:	.asciiz "Computer Wins!"
-tie:		.asciiz "Tie!"
 prompt:		.asciiz "Which game mode would you like to play?\n2 for 2P, 1 for 1P, 0 for 0P: "
 
 .text
@@ -26,7 +22,7 @@ prompt:		.asciiz "Which game mode would you like to play?\n2 for 2P, 1 for 1P, 0
 		
 		loop:	# TEST can delete this line
 			add $t0, $s3, $s4		#gets sum of player score and computer score
-			beq $t0, 48, gameOver		#if the sum is 48, jump to game over
+			beq $t0, 48, endScreen		#if the sum is 48, jump to game over
 			
 			beq $s7, 2, p1
 			beq $s7, 0, comp
@@ -59,23 +55,6 @@ prompt:		.asciiz "Which game mode would you like to play?\n2 for 2P, 1 for 1P, 0
 switchPlayer:	addi $a2, $a2, 1
 		and $a2, $a2, 1
 		jr $ra
-		
-gameOver:	jal endScreen
-		li $v0, 32
-		li $a0, 1000
-		syscall
-		bgt $s3, $s4, player		#if player score greater than computer score, player wins
-		blt $s3, $s4, computer		#if player score less than computer score, computer wins
-		jal tied
-		j exit
-
-	player:	
-		jal blue_wins
-		j exit
-		
-	computer:	
-		jal red_wins
-		j exit
 
 exit:
 		li $v0, 10 			# terminate the program

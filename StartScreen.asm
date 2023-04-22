@@ -6,10 +6,6 @@
 
 .text
 .globl startScreen
-.globl endScreen
-.globl blue_wins
-.globl red_wins
-.globl tied
 # Creates the Interface for Dots and Boxes
 # ----------------------------------------
 	# Call the subroutine below to set up the bitmap image
@@ -20,6 +16,7 @@
 		
 		addi $sp, $sp, -4 	#
 		sw $ra, 0($sp)		# preserves original return address
+		
 		
 	start:	jal background
 		
@@ -87,262 +84,6 @@
 			addi $t0, $t0, 4	# increments display pointer by 4
 			bne $t0, $s2, fill_space	# while display start < display end, loop
 		jr $ra
-		
-#	endScreen:
-#		li $t9, 0
-#		li $t8, 0
-#	repeat:	li $a1, 4096
-#		li $v0, 42
-#		syscall
-#		move $t1, $a0
-#		sll $t1, $t1, 2
-#		add $t0, $s0, $t1
-#	next:	lw $t2, 0($t0)
-#		bne $t0, $s2, loop
-#		addi $t0, $s0, -4
-#	loop:	addi $t0, $t0, 4
-#		beqz $t2, next
-#		li $v0, 32
-#		li $a0, 3
-#		syscall
-#		sw $t9, -4($t0)
-#		addi $t8, $t8, 1
-#		bne $t8, 4000, repeat
-#		j return
-		
-	endScreen:
-		li $t9, 0
-		li $t8, 0
-	repeat:	li $a1, 4096
-		li $v0, 42
-		syscall
-		move $t1, $a0
-		sll $t1, $t1, 2
-		add $t0, $s0, $t1
-		lw $t2, 0($t0)
-		beqz $t2, repeat
-		li $v0, 32
-		li $a0, 1
-		syscall
-		sw $t9, ($t0)
-		addi $t8, $t8, 1
-		bne $t8, 3373, repeat
-		j return
-		
-	red_wins:
-		li $t9, 0xffffff
-		addi $t0, $s0, 1860
-		
-		sw $t9, 0($t0)
-		sw $t9, 4($t0)
-		sw $t9, 8($t0)
-		sw $t9, 256($t0)
-		sw $t9, 264($t0)
-		sw $t9, 512($t0)
-		sw $t9, 516($t0)
-		sw $t9, 768($t0)
-		sw $t9, 776($t0)
-		sw $t9, 1024($t0)
-		sw $t9, 1032($t0)
-		
-		sw $t9, 16($t0)
-		sw $t9, 20($t0)
-		sw $t9, 24($t0)
-		sw $t9, 272($t0)
-		sw $t9, 528($t0)
-		sw $t9, 532($t0)
-		sw $t9, 536($t0)
-		sw $t9, 784($t0)
-		sw $t9, 1040($t0)
-		sw $t9, 1044($t0)
-		sw $t9, 1048($t0)
-		
-		sw $t9, 32($t0)
-		sw $t9, 36($t0)
-		sw $t9, 288($t0)
-		sw $t9, 296($t0)
-		sw $t9, 544($t0)
-		sw $t9, 552($t0)
-		sw $t9, 800($t0)
-		sw $t9, 808($t0)
-		sw $t9, 1056($t0)
-		sw $t9, 1060($t0)
-		
-		sw $t9, 56($t0)
-		sw $t9, 72($t0)
-		sw $t9, 312($t0)
-		sw $t9, 328($t0)
-		sw $t9, 568($t0)
-		sw $t9, 576($t0)
-		sw $t9, 584($t0)
-		sw $t9, 824($t0)
-		sw $t9, 832($t0)
-		sw $t9, 840($t0)
-		sw $t9, 1084($t0)
-		sw $t9, 1092($t0)
-		
-		sw $t9, 80($t0)
-		sw $t9, 336($t0)
-		sw $t9, 592($t0)
-		sw $t9, 848($t0)
-		sw $t9, 1104($t0)
-		
-		sw $t9, 88($t0)
-		sw $t9, 100($t0)
-		sw $t9, 344($t0)
-		sw $t9, 348($t0)
-		sw $t9, 356($t0)
-		sw $t9, 600($t0)
-		sw $t9, 604($t0)
-		sw $t9, 608($t0)
-		sw $t9, 612($t0)
-		sw $t9, 856($t0)
-		sw $t9, 864($t0)
-		sw $t9, 868($t0)
-		sw $t9, 1112($t0)
-		sw $t9, 1124($t0)
-		
-		sw $t9, 108($t0)
-		sw $t9, 112($t0)
-		sw $t9, 116($t0)
-		sw $t9, 364($t0)
-		sw $t9, 620($t0)
-		sw $t9, 624($t0)
-		sw $t9, 628($t0)
-		sw $t9, 884($t0)
-		sw $t9, 1132($t0)
-		sw $t9, 1136($t0)
-		sw $t9, 1140($t0)
-		j return
-		
-	blue_wins:
-		li $t9, 0xffffff
-		addi $t0, $s0, 1872
-		
-		sw $t9, -16($t0)
-		sw $t9, -20($t0)
-		sw $t9, 236($t0)
-		sw $t9, 244($t0)
-		sw $t9, 492($t0)
-		sw $t9, 496($t0)
-		sw $t9, 748($t0)
-		sw $t9, 756($t0)
-		sw $t9, 1004($t0)
-		sw $t9, 1008($t0)
-		
-		sw $t9, -4($t0)
-		sw $t9, 252($t0)
-		sw $t9, 508($t0)
-		sw $t9, 764($t0)
-		sw $t9, 1020($t0)
-		sw $t9, 1024($t0)
-		sw $t9, 1028($t0)
-		
-		sw $t9, 12($t0)
-		sw $t9, 20($t0)
-		sw $t9, 268($t0)
-		sw $t9, 276($t0)
-		sw $t9, 524($t0)
-		sw $t9, 532($t0)
-		sw $t9, 780($t0)
-		sw $t9, 788($t0)
-		sw $t9, 1036($t0)
-		sw $t9, 1040($t0)
-		sw $t9, 1044($t0)
-		
-		sw $t9, 28($t0)
-		sw $t9, 32($t0)
-		sw $t9, 36($t0)
-		sw $t9, 284($t0)
-		sw $t9, 540($t0)
-		sw $t9, 544($t0)
-		sw $t9, 548($t0)
-		sw $t9, 796($t0)
-		sw $t9, 1052($t0)
-		sw $t9, 1056($t0)
-		sw $t9, 1060($t0)
-		
-		sw $t9, 56($t0)
-		sw $t9, 72($t0)
-		sw $t9, 312($t0)
-		sw $t9, 328($t0)
-		sw $t9, 568($t0)
-		sw $t9, 576($t0)
-		sw $t9, 584($t0)
-		sw $t9, 824($t0)
-		sw $t9, 832($t0)
-		sw $t9, 840($t0)
-		sw $t9, 1084($t0)
-		sw $t9, 1092($t0)
-		
-		sw $t9, 80($t0)
-		sw $t9, 336($t0)
-		sw $t9, 592($t0)
-		sw $t9, 848($t0)
-		sw $t9, 1104($t0)
-		
-		sw $t9, 88($t0)
-		sw $t9, 100($t0)
-		sw $t9, 344($t0)
-		sw $t9, 348($t0)
-		sw $t9, 356($t0)
-		sw $t9, 600($t0)
-		sw $t9, 604($t0)
-		sw $t9, 608($t0)
-		sw $t9, 612($t0)
-		sw $t9, 856($t0)
-		sw $t9, 864($t0)
-		sw $t9, 868($t0)
-		sw $t9, 1112($t0)
-		sw $t9, 1124($t0)
-		
-		sw $t9, 108($t0)
-		sw $t9, 112($t0)
-		sw $t9, 116($t0)
-		sw $t9, 364($t0)
-		sw $t9, 620($t0)
-		sw $t9, 624($t0)
-		sw $t9, 628($t0)
-		sw $t9, 884($t0)
-		sw $t9, 1132($t0)
-		sw $t9, 1136($t0)
-		sw $t9, 1140($t0)
-		j return
-		
-	tied:
-		li $t9, 0xffffff
-		addi $t0, $s0, 1896
-		
-		sw $t9, 0($t0)
-		sw $t9, 4($t0)
-		sw $t9, 8($t0)
-		sw $t9, 260($t0)
-		sw $t9, 516($t0)
-		sw $t9, 772($t0)
-		sw $t9, 1028($t0)
-		
-		sw $t9, 16($t0)
-		sw $t9, 20($t0)
-		sw $t9, 24($t0)
-		sw $t9, 276($t0)
-		sw $t9, 532($t0)
-		sw $t9, 788($t0)
-		sw $t9, 1040($t0)
-		sw $t9, 1044($t0)
-		sw $t9, 1048($t0)
-		
-		sw $t9, 32($t0)
-		sw $t9, 36($t0)
-		sw $t9, 40($t0)
-		sw $t9, 288($t0)
-		sw $t9, 544($t0)
-		sw $t9, 548($t0)
-		sw $t9, 552($t0)
-		sw $t9, 800($t0)
-		sw $t9, 1056($t0)
-		sw $t9, 1060($t0)
-		sw $t9, 1064($t0)
-		j return
 		
 	choice:
 		addi $t3, $t0, 836
@@ -516,6 +257,7 @@
 		sw $t1, 1128($t3)
 		
 	return:	jr $ra
+	
 		
 	title:
 		sw $t1, 0($t0)
