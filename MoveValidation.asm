@@ -8,6 +8,19 @@ box_array:	.space 192
 .globl	save_line
 .globl	check_box
 .globl	check_move
+.globl 	mem_reset
+
+mem_reset:
+		li $t0, 0
+		li $t1, 0
+		li $t2, 0
+	loop1:	sw $t0, line_array($t1)
+		addi $t1, $t1, 4
+		bne $t1, 468, loop1
+	loop2:	sw $t0, box_array($t2)
+		addi $t2, $t2, 4
+		bne $t2, 192, loop2
+		jr $ra
 
 save_line:	
 		li $t2, 1			#save line to array in memory ($s4 is the value we write in memory to represent line is taken)

@@ -8,6 +8,10 @@ prompt:		.asciiz "Which game mode would you like to play?\n2 for 2P, 1 for 1P, 0
 	#s3 = player score
 	#s4 = computer score
 	main:
+		li $s3, 0
+		li $s4, 0
+		jal mem_reset
+		
 		li $v0, 4
 		la $a0, prompt
 		syscall
@@ -28,7 +32,7 @@ prompt:		.asciiz "Which game mode would you like to play?\n2 for 2P, 1 for 1P, 0
 			beq $s7, 0, comp
 			beqz $a2, p1
 		comp:	li $v0, 32
-			la $a0, 50
+			la $a0, 300
 			syscall
 			
 			jal make_move
@@ -40,6 +44,7 @@ prompt:		.asciiz "Which game mode would you like to play?\n2 for 2P, 1 for 1P, 0
 			move $a1, $v1		# moves the inputs as args for create_line
 			
 		update:	jal create_line		#creates a line on interface
+			jal move_sound
 			jal check_box		#checks if new line will create boxes
 			jal save_line		#saves the line into the line array and increments the values in the box array
 			jal switchPlayer	#switches player turn
