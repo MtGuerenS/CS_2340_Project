@@ -11,7 +11,7 @@ box_array:	.space 192
 .globl 	mem_reset
 
 mem_reset:
-		li $t0, 0
+		li $t0, 0			#reset values of line_array and box_array to 0
 		li $t1, 0
 		li $t2, 0
 	loop1:	sw $t0, line_array($t1)
