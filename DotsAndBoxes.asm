@@ -44,7 +44,7 @@ prompt:		.asciiz "Which game mode would you like to play?\n2 for 2P, 1 for 1P, 0
 			move $a1, $v1		# moves the inputs as args for create_line
 			
 		update:	jal create_line		#creates a line on interface
-			jal move_sound
+			#jal move_sound
 			jal check_box		#checks if new line will create boxes
 			jal save_line		#saves the line into the line array and increments the values in the box array
 			jal switchPlayer	#switches player turn

@@ -1,7 +1,7 @@
 .data
 	row_prompt: .asciiz "Enter the ROW number for you move: "
 	col_prompt: .asciiz "Enter the COLUMN number for you move: "
-	err_msg:    .asciiz "The row _ and column _ is an invalid move.\n"
+	err_msg:    .asciiz "Invalid move. Select another line.\n"
 
 .text
 .globl input
